@@ -1,6 +1,7 @@
-use std::io::{self, stdout, Write};            
-use termion::event::Key;            
-use termion::input::TermRead;            
+use crate::Position;
+use std::io::{self, stdout, Write};
+use termion::event::Key;
+use termion::input::TermRead;
 use termion::raw::{IntoRawMode, RawTerminal};
 
 pub struct Size {
@@ -16,7 +17,7 @@ pub struct Terminal {
 impl Terminal {
     pub fn default() -> Result<Self, std::io::Error> {
         let size = termion::terminal_size()?;
-        Ok (Self {
+        Ok(Self {
             size: Size {
                 width: size.0,
                 height: size.1,
@@ -33,9 +34,12 @@ impl Terminal {
         print!("{}", termion::clear::All);
     }
 
-    pub fn cursor_position(x: u16, y: u16) {
-        let x = x.saturating_add(1);
-        let y = y.saturating_add(1);
+    pub fn cursor_position(position: &Position) {
+        let Position { mut x, mut y } = position;
+        x = x.saturating_add(1);
+        y = y.saturating_add(1);
+        let x = x as u16;
+        let y = y as u16;
         print!("{}", termion::cursor::Goto(x, y));
     }
 
@@ -51,4 +55,15 @@ impl Terminal {
         }
     }
 
+    pub fn cursor_hide() {
+        print!("{}", termion::cursor::Hide);
+    }
+
+    pub fn cursor_show() {
+        print!("{}", termion::cursor::Show);
+    }
+
+    pub fn clear_current_line() {
+        print!("{}", termion::clear::CurrentLine);
+    }
 }
