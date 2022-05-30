@@ -1,7 +1,6 @@
 use crate::Document;
 use crate::Row;
 use crate::Terminal;
-use crate::document;
 use std::env;
 use termion::event::Key;
 
